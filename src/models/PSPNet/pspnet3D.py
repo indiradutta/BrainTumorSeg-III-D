@@ -9,8 +9,33 @@ import pandas as pd
 import numpy as np
 
 class Bottleneck(nn.Module):
+    
+    """
+    Class for each Bottleneck in ResNet50
+    
+    """
 
     def __init__(self, in_channels, out_channels, stride=1, downsample=None, dilation=1):
+        
+        """
+        Parameters:
+        
+        - in_channels: no. of input channels
+        
+        - out_channels: no. of output channels
+        
+        - kernel_size: kernel size for conv in each block
+        
+        - stride(default: 1): stride to be assigned to each block
+        
+        - dilation(default: 1): amount of dilation to be assigned to each block
+        
+        - downsample(default: None): downsampling module to be added
+        
+        - bias(default: False): boolean bias to be assigned to each block
+        
+        """
+        
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv3d(in_channels, out_channels, kernel_size=1, stride=1, dilation=1, bias=False)
         self.bn1 = nn.BatchNorm3d(out_channels)
@@ -45,9 +70,28 @@ class Bottleneck(nn.Module):
         return out
 
 class ResNet50_3D(nn.Module):
+    
+    """
+    Main class for building the ResNet50
+    
+    """
 
     def __init__(self, block, layers=[3, 4, 6, 3], num_classes=4, base=True):
         super(ResNet50_3D, self).__init__()
+        
+        """
+        Parameters:
+        
+        - block: block to be constructed (for ResNet50: Bottleneck)
+        
+        - layers: no of conv layers in each block, passed as a list (for ResNet50: [3 4, 6, 3])
+        
+        - num_classes(default: 3): no. of classes
+        
+        - base(default: True): specifies the input dimension of the image, it is true for 64 x 64 x 64 images and false for 128 x 128 x 128 images
+        
+        """
+        
         self.base = base
         
         if not self.base:
@@ -79,6 +123,11 @@ class ResNet50_3D(nn.Module):
             elif isinstance(m, nn.BatchNorm3d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+                
+    """
+    function for building convolution blocks
+    
+    """
 
     def _make_layer(self, block, out_channels, blocks, stride=1, dilation=1):
         downsample = None
@@ -112,8 +161,21 @@ class ResNet50_3D(nn.Module):
         return p4, p5
 
 class PPM(nn.Module):
+    
     def __init__(self, in_dimension, reduction_dimension, ppm_layers=(1, 2, 3, 6)):
         super(PPM, self).__init__()
+        
+        """
+        Parameters:
+        
+        - in_dimension: no. of input channels
+        
+        - reduction_dimension: no. of output channels
+        
+        - ppm_layers(default: (1, 2, 3, 6)): output dimension of the features after adaptive average pooling, passed as a list
+        
+        """
+        
         self.features = []
         self.ppm_layers = ppm_layers
 
@@ -127,7 +189,6 @@ class PPM(nn.Module):
         self.conv = nn.Conv3d(in_dimension * (len(self.ppm_layers) + 1), reduction_dimension, kernel_size=1)
 
     def forward(self, x):
-
         b, c, d, h, w = x.size()
         result = [x]
 
@@ -139,15 +200,41 @@ class PPM(nn.Module):
         return result
 
 class PSPNet(nn.Module):
+    
+    """
+    Generate Model Architecture
+    """
+    
     def __init__(self, n_classes=4, zoom_factor=0, sizes=(1, 2, 3, 6), base=True):
 
         super().__init__()
+        
+        """
+        Parameters:
+        
+        - n_classes(deafult :4): no. of classes
+        
+        - zoom_factor(default: 0): the factor by which the output has to be downsampled
+        
+        - ppm_layers(default: (1, 2, 3, 6)): a list of output dimension of the features after adaptive average pooling, to be passed in the PPM
+        
+        """
 
         self.zoom_factor = zoom_factor
         self.in_dimension = 2048
         self.base = base
-
+        
+        """
+        define the encoder
+        
+        """
+        
         self.encoder = ResNet50_3D(Bottleneck, [3, 4, 6, 3]) #specify base=False if input dim = 64
+        
+        """
+        define the pyramid pooling network
+        
+        """
 
         self.ppm = PPM(self.in_dimension, 1024, sizes)
 
