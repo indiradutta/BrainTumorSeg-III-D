@@ -1,5 +1,17 @@
 class Block(nn.Module):
+    """
+    Reusable residual convolutional block
+    """
     def __init__(self,in_channels,out_channels,padding,stride=1):
+        
+        """
+        Parameters:
+        - in_channels: input channels of image passed to block
+        - out_channels: output channels required
+        - padding: amount of padding to be assigned
+        - stride(default: 1): stride to be assigned
+        
+        """
         super(Block,self).__init__()
 
         self.bn1 = nn.BatchNorm3d(in_channels)
@@ -34,6 +46,15 @@ class Block(nn.Module):
       
 class Attention(nn.Module):
     def __init__(self,fx,fg,final):
+        """
+        
+        Parameters:
+        - fx: channels in x
+        - fg: channels in gate
+        - final: no. of output channels
+        
+        """
+        
         super(Attention,self).__init__()
         self.convg = nn.Conv3d(fg,final,kernel_size=1,stride=1,padding=0,bias=True)
         self.bng = nn.BatchNorm3d(final)
@@ -59,7 +80,21 @@ class Attention(nn.Module):
         return psi
       
 class AttnResUnet3D(nn.Module):
+    """
+    Primary model block
+    
+    """
     def __init__(self,Block,Attn,img_channels,channels):
+        
+        """
+        Parameters:
+        - Block: Residual block
+        - Attn: Attention block
+        - img_channels: no. of channels in each image
+        - channels: list of channels to be used in convolutional layers
+        
+        """
+            
         super(AttnResUnet3D,self).__init__()
 
         #Encoder part
