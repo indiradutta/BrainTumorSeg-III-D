@@ -88,7 +88,7 @@ class ResNet50_3D(nn.Module):
         
         - num_classes(default: 3): no. of classes
         
-        - base(default: True): specifies the input dimension of the image, it is true for 64 x 64 x 64 images and false for 128 x 128 x 128 images
+        - base(default: True): specifies the input dimension of the image, it is true for 64 x 64 x 64 images and false for others
         
         """
         
