@@ -7,15 +7,15 @@ import pickle
 import argparse
 import os
 
-from .data.preprocessing import Preprocessing
+from data.preprocessing import Preprocessing
 
-from .src.models.ARUNET.arunet3D import ARUNET, Block, Attention
-from .src.models.LinkNet.linknet3D import LinkNet
-from .src.models.PSPNet.pspnet3D import PSPNet
+from src.models.ARUNET.arunet3D import ARUNET, Block, Attention
+from src.models.LinkNet.linknet3D import LinkNet
+from src.models.PSPNet.pspnet3D import PSPNet
 
-from .src.train.aru_train import train_arunet
-from .src.train.link_train import train_linknet
-from .src.train.psp_train import train_pspnet
+from src.train.aru_train import train_arunet
+from src.train.link_train import train_linknet
+from src.train.psp_train import train_pspnet
 
 
 with open('imgs.pkl','rb') as f:
