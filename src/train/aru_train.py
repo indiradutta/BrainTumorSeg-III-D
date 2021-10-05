@@ -1,3 +1,10 @@
+from dice import DiceLoss
+from models.ARUNET.arunet3D import ARUNET3D
+from plotting import plot
+import torch
+import torch.nn as nn
+
+
 def train(m,loader,opt,epochs):
     losses = []
     dsc = []
@@ -42,3 +49,14 @@ def train(m,loader,opt,epochs):
 
     torch.save(model_data,'arunet3d.pth')
     print('done :)')
+
+    
+def main():
+    ARU = AttnResUnet3D(Block,Attention,1,[64,128,256,512])
+    epochs = 200
+    train_d = Preprocessing(im_path='/content/drive/MyDrive/RESEARCH-MRCN/data/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData/',l1=d[:250],test=False)
+    tdata = DataLoader(train_d,batch_size=4,shuffle=True)
+    opt = torch.optim.RMSprop(ARU.parameters(),lr=0.0001)
+  
+if __name__ == '__main__':
+    main()
