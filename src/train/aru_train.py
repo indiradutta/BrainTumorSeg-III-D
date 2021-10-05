@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 
 
-def train(m, loader, criterion, opt, epochs):
+def train_arunet(m, loader, opt, epochs):
     losses = []
     dsc = []
     isc = []
@@ -22,23 +22,19 @@ def train(m, loader, criterion, opt, epochs):
                 x[i],y[i] = x[i].cuda(),y[i].cuda()
 
                 out = m(x[i])
-                
-                loss1 = criterion.dice_loss(out,y[i].detach())
+                dice = DiceLoss()
+                loss1 = dice.dice_loss(out,y[i].detach(),multiclass=True)
                 loss1.backward()
 
                 opt.step()
 
-        if e%5 == 0:
-            plt.imshow(y[i][0,2,:,:,33].cpu().detach())
-            plt.show()
-            plt.imshow(out[0,2,:,:,33].cpu().detach())
-            plt.show()
        
         losses.append(loss1.item())             
         dsc.append(1-loss1.item())
 
         print('Epoch: ',str(e+1),'Dice Loss: ',str(loss1.item()),'Dice Score: ',str(1-loss1.item()))
-
+        
+        #model checkpoint - every 50th epoch
         if e%50 == 0:
             model_data = {'model': m.state_dict(),'optimizer': opt.state_dict(),'loss': losses,'dice': dsc}
             torch.save(model_data,'ar-unet3d'+str(e+1)+'.pth')
@@ -49,16 +45,3 @@ def train(m, loader, criterion, opt, epochs):
 
     torch.save(model_data,'arunet3d.pth')
     print('done :)')
-
-    
-def main():
-    ARU = AttnResUnet3D(Block,Attention,1,[64,128,256,512])
-    epochs = 200
-    train_d = Preprocessing(im_path='/content/drive/MyDrive/RESEARCH-MRCN/data/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData/',l1=d[:250],test=False)
-    tdata = DataLoader(train_d,batch_size=4,shuffle=True)
-    crit = DiceLoss()
-    opt = torch.optim.RMSprop(ARU.parameters(),lr=0.0001)
-    train(ARU, tdata, crit, opt, epochs)
-    
-if __name__ == '__main__':
-    main()
