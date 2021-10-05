@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 from .dice import DiceLoss
 from train.plotter import plot
 
-def train(net, loader, opt, epochs):
+def train_linknet(net, loader, opt, epochs):
     
     net = net.cuda()   # shifting model to cuda for training
     
@@ -57,3 +57,4 @@ def train(net, loader, opt, epochs):
     plot(losses, dsc)
 
     torch.save(model_data,'linknet3d.pth')
+    print("done :)")
