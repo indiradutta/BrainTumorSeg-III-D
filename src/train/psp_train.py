@@ -23,7 +23,7 @@ import warnings
 torch.cuda.empty_cache()
 warnings.filterwarnings('ignore')
 
-def train(model, trainloader, lr, epochs, optimizer):
+def train_pspnet(model, trainloader, lr, epochs, optimizer):
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     if torch.cuda.is_available():
@@ -58,3 +58,4 @@ def train(model, trainloader, lr, epochs, optimizer):
     model_data = {'model': model.state_dict(),'optimizer': optimizer.state_dict(),'loss': losses,'dice': dice_scores}
 
     torch.save(model_data, 'pspnet3D.pth')  
+    print("done :)")
