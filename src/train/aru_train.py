@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 
 
-def train(m,loader,opt,epochs):
+def train(m, loader, criterion, opt, epochs):
     losses = []
     dsc = []
     isc = []
@@ -23,7 +23,7 @@ def train(m,loader,opt,epochs):
 
                 out = m(x[i])
                 
-                loss1 = dice_loss(out,y[i].detach(),multiclass=True)
+                loss1 = criterion.dice_loss(out,y[i].detach())
                 loss1.backward()
 
                 opt.step()
@@ -56,7 +56,9 @@ def main():
     epochs = 200
     train_d = Preprocessing(im_path='/content/drive/MyDrive/RESEARCH-MRCN/data/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData/',l1=d[:250],test=False)
     tdata = DataLoader(train_d,batch_size=4,shuffle=True)
+    crit = DiceLoss()
     opt = torch.optim.RMSprop(ARU.parameters(),lr=0.0001)
-  
+    train(ARU, tdata, crit, opt, epochs)
+    
 if __name__ == '__main__':
     main()
