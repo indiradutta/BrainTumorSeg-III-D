@@ -83,7 +83,7 @@ class Attention(nn.Module):
 
         return psi
       
-class ARUNET3D(nn.Module):
+class ARUNET(nn.Module):
     """
     Primary model block
     
@@ -99,7 +99,7 @@ class ARUNET3D(nn.Module):
         
         """
             
-        super(ARUNET3D,self).__init__()
+        super(ARUNET,self).__init__()
 
         #Encoder part
         self.input = nn.Sequential(nn.Conv3d(img_channels,channels[0],kernel_size=3,stride=1,padding=1),
