@@ -11,11 +11,11 @@ import time
 import cv2
 import nibabel as nib
 
-from .data.infer_preprocess import Infer_Preprocess
+from data.infer_preprocess import Infer_Preprocess
 
-from .src.models.ARUNET.arunet3D import ARUNET, Block, Attention
-from .src.models.LinkNet.linknet3D import LinkNet
-from .src.models.PSPNet.pspnet3D import PSPNet
+from src.models.ARUNET.arunet3D import ARUNET, Block, Attention
+from src.models.LinkNet.linknet3D import LinkNet
+from src.models.PSPNet.pspnet3D import PSPNet
 
 
 __PREFIX__ = os.path.dirname(os.path.realpath(__file__))
