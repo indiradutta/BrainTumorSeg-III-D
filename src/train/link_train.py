@@ -11,7 +11,7 @@ import warnings
 torch.cuda.empty_cache()
 warnings.filterwarnings('ignore')
 
-from train.dice import *
+from .dice import DiceLoss
 from train.plotter import plot
 
 def train(net, loader, opt, epochs):
@@ -41,7 +41,8 @@ def train(net, loader, opt, epochs):
                 
                 out = net(inputs)
                 
-                loss, score = dice_loss(out, targets.detach(), multiclass=True)
+                dice = DiceLoss()
+                loss, score = dice.dice_loss(out, targets.detach(), multiclass=True)
                 loss.backward()
 
                 opt.step()  
