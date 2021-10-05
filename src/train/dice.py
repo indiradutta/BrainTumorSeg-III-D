@@ -1,5 +1,6 @@
 import torch
 from torch import Tensor
+import torch.nn as nn
 
 class DiceLoss(nn.Module):
     def __init__(self, reduce_batch_first = False, epsilon=1e-6):
