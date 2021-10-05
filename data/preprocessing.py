@@ -13,7 +13,7 @@ import cv2
 
 class Preprocessing(Dataset):
 
-    def __init__(self, im_path, l1, bs=1, test=False):
+    def __init__(self, im_path, l1, im_dim = (128,128), bs=1, test=False):
 
         """
         Parameters:
@@ -24,12 +24,14 @@ class Preprocessing(Dataset):
         
         - bs(default: 1): batch_size (no. of images passed at once)
         
+        - im_dim(default: (128, 128)): dimension of the passed images, should be changed with respect to architectures ((64, 64) for arunet, (224, 224) for linknet) 
+        
         """
 
         super(Preprocessing,self).__init__()
 
         self.root = im_path
-        #self.dim = im_dim
+        self.dim = im_dim
         self.files = l1
         self.bs = bs
         self.count = 0
@@ -44,7 +46,7 @@ class Preprocessing(Dataset):
       
         return len(self.files)
 
-    def mod_preprocess(self, img, imdim):
+    def mod_preprocess(self, img):
       
         """
         returns the normalized image with 128 slices
@@ -53,13 +55,11 @@ class Preprocessing(Dataset):
         
         - img: array of the input image
         
-        - imdim: dimension of the passed images
-        
         """
       
         img = np.asarray(img)
-        img1 = cv2.resize(img, imdim)
-        xpre = np.zeros((1, imdim[0], imdim[1], 64))
+        img1 = cv2.resize(img, self.dim)
+        xpre = np.zeros((1, self.dim[0], self.dim[1], 64))
         c = 0
 
         for i in range(40,104):
@@ -76,7 +76,7 @@ class Preprocessing(Dataset):
         return xpre
 
 
-    def mask_preprocess(self, msk, imdim):
+    def mask_preprocess(self, msk):
       
         """
         returns the binary version of the mask - tumor(1) or no tumor(0)
@@ -85,12 +85,10 @@ class Preprocessing(Dataset):
         
         - msk: passed as the 'mod_preprocess'-ed image
         
-        - imdim: dimension of the passed images
-        
         """
       
         img1 = np.asarray(msk)
-        img1 = cv2.resize(img1, imdim)
+        img1 = cv2.resize(img1, self.dim)
         img1 = img1[:,:,40:104]
         
         img1[img1==4] = 3
