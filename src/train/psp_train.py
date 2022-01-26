@@ -1,29 +1,21 @@
+import tqdm
 import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
-import torch.nn.functional as F
-import torchio as tio
-
+from torch.autograd import Variable
 import os
-import h5py
-import cv2
-import pandas as pd
-import numpy as np
-import scipy
-import pickle
-import re
-from tqdm import tqdm
 
-import nibabel as nib
-
-from torch import Tensor
-from torch.utils.data import Dataset, DataLoader
+#os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
 import warnings
+
 torch.cuda.empty_cache()
 warnings.filterwarnings('ignore')
 
-def train_pspnet(model, trainloader, lr, epochs, optimizer):
+from src.models.PSPNet.pspnet3D import PSPNet
+from .dice import DiceLoss
+from .plotting import plot
+
+def train_pspnet(model, trainloader, optimizer, epochs):
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     if torch.cuda.is_available():
@@ -34,7 +26,7 @@ def train_pspnet(model, trainloader, lr, epochs, optimizer):
 
     model.train()
 
-    for epoch in tqdm(range(epochs)):
+    for epoch in range(epochs):
 
         for idx, (x,y) in enumerate(trainloader):
             
@@ -56,6 +48,8 @@ def train_pspnet(model, trainloader, lr, epochs, optimizer):
         print('Epoch: ',str(epoch),'Dice Loss: ',str(d_loss.item()), 'Dice Score: ', str(d_score))
 
     model_data = {'model': model.state_dict(),'optimizer': optimizer.state_dict(),'loss': losses,'dice': dice_scores}
+    
+    plot(losses, dice_scores)
 
     torch.save(model_data, 'pspnet3D.pth')  
     print("done :)")

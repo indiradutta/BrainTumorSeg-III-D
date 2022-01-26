@@ -1,3 +1,4 @@
+import tqdm
 from tqdm import trange
 import torch
 import torch.nn as nn
@@ -11,12 +12,17 @@ import warnings
 torch.cuda.empty_cache()
 warnings.filterwarnings('ignore')
 
+from src.models.LinkNet.linknet3D import LinkNet
 from .dice import DiceLoss
-from train.plotter import plot
+from .plotting import plot
 
 def train_linknet(net, loader, opt, epochs):
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    if torch.cuda.is_available():
+        net.cuda()      # shifting model to cuda for training
     
-    net = net.cuda()   # shifting model to cuda for training
+    #net = net.cuda()   
     
     losses = []  # storing the dice loss
     dsc = []   # storing the dice scores/coefficient
@@ -25,7 +31,7 @@ def train_linknet(net, loader, opt, epochs):
     
     net.train()
 
-    for epoch in tqdm(range(epochs)):
+    for epoch in range(epochs):
         
         for _,(x,y) in enumerate(loader):
             

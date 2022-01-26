@@ -1,6 +1,8 @@
-from dice import DiceLoss
-from models.ARUNET.arunet3D import ARUNET3D
-from plotting import plot
+from .dice import DiceLoss
+from src.models.ARUNET.arunet3D import ARUNET
+from .plotting import plot
+
+import os
 import torch
 import torch.nn as nn
 
@@ -10,10 +12,15 @@ def train_arunet(m, loader, opt, epochs):
     dsc = []
     isc = []
     os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
-    m = m.cuda()
+    
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    if torch.cuda.is_available():
+        m.cuda()
+        
+    #m = m.cuda()
     m.train()
 
-    for e in tqdm(range(epochs)):        
+    for e in range(epochs):        
         for _,(x,y) in enumerate(loader):
             for i in range(len(x)): 
                 opt.zero_grad()
