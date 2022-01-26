@@ -1,12 +1,7 @@
 import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
-import torch.nn.functional as F
-import torchio as tio
 
-import cv2
-import pandas as pd
-import numpy as np
+from torch.autograd import Variable
 
 class Bottleneck(nn.Module):
     
