@@ -132,7 +132,7 @@ class Decoder(nn.Module):
                                 nn.BatchNorm3d(in_planes//4),
                                 nn.ReLU(inplace=True),)
         
-        self.up = nn.Sequential(nn.Upsample(scale_factor=2, mode = 'trilinear'),
+        self.tp_conv = nn.Sequential(nn.Upsample(scale_factor=2, mode = 'trilinear'),
                                 nn.BatchNorm3d(in_planes//4),
                                 nn.ReLU(inplace=True),)
         
@@ -143,7 +143,7 @@ class Decoder(nn.Module):
     def forward(self, x):
       
         x = self.conv1(x)
-        x = self.up(x)
+        x = self.tp_conv(x)
         x = self.conv2(x)
 
         return x
@@ -182,9 +182,9 @@ class LinkNet(nn.Module):
 
 
         # Classifier
-        self.conv2 = nn.Conv3d(64, 32, 3, 1, 1)
-        self.up = nn.Upsample(scale_factor=2, mode='trilinear', align_corners=True)       
-        self.conv3 = nn.Conv3d(32, n_classes, 3, 1, 1)
+        self.conv = nn.Conv3d(64, 32, 3, 1, 1)
+        self.tp_conv1 = nn.Upsample(scale_factor=2, mode='trilinear', align_corners=True)       
+        self.conv2 = nn.Conv3d(32, n_classes, 3, 1, 1)
         self.softmax = nn.Softmax()
 
 
@@ -209,9 +209,9 @@ class LinkNet(nn.Module):
         d1 = self.decoder1(d2)
         
         # Classifier
-        y = self.conv2(d1)
-        y = self.up(y)
-        y = self.conv3(y)
+        y = self.conv(d1)
+        y = self.tp_conv1(y)
+        y = self.conv2(y)
 
         y = self.softmax(y)
 
