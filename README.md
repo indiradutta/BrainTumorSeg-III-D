@@ -1,29 +1,44 @@
-# Utilizing Attention, Linked Blocks, and Pyramid Pooling to Propel Brain Tumor Segmentation in 3D
-Brain tumor segmentation involves identifying the tumorous region in the brain (pixels indicating the tumorous cells in the MRI scans). Hence, for the purpose of segmenting brain tumors, we present three novel 3D architectures.
-
-![epi](https://user-images.githubusercontent.com/66861243/136070815-ea8bf6cd-517a-409a-b3a4-f01ad0c93b2c.jpg)
-
+<h1 align = "center">Utilizing Attention, Linked Blocks, and Pyramid Pooling to Propel Brain Tumor Segmentation in 3D</h1>
+Brain tumor segmentation involves identifying the tumorous region in the brain (pixels indicating the tumorous cells in the MRI scans).  Hence, for the purpose of segmenting brain tumors, we present three novel 3D architectures.
 
 ## Abstract
 We present an approach to detect and segment tumorous regions of the brain by establishing three varied segmentation architectures for multiclass semantic segmentation along with data specific customizations like residual blocks, soft attention mechanism, pyramid pooling, linked architecture and 3D compatibility to work with 3D brain MRI images. The proposed segmentation architectures namely, Attention Residual UNET 3D also referred to as AR-UNET 3D, LinkNet 3D and PSPNet 3D, segment the MRI images and succeed in isolating three classes of tumors. By assigning pixel probabilities, each of these models differentiates between pixels belonging to tumorous and non-tumorous regions of the brain. By experimenting and observing the performance of each of the three architectures using metrics like Dice loss and Dice score, on the BraTS2020 dataset, we successfully establish quality results.
 
 ## Research Overview
-1. AR-UNET 3D - The Attention Residual UNET 3D or AR-UNET 3D is a modification upon the existing Residual U-Net and Attention U-Net, both of which operate in 2D. AR-UNET 3D makes use of the residual blocks from ResNet which help in maintaining skip connections using identity mappings while the proposed soft attention mechanism provides an added advantage by weighing the more important features, heavily.
+1. **AR-UNET 3D** - The Attention Residual UNET 3D or AR-UNET 3D is a modification upon the existing Residual U-Net and Attention U-Net, both of which operate in 2D. AR-UNET 3D makes use of the residual blocks from ResNet which help in maintaining skip connections using identity mappings while the proposed soft attention mechanism provides an added advantage by weighing the more important features, heavily.
 
-2. LinkNet 3D - The LinkNet 3D is a modification upon the existing LinkNet in 2D. LinkNet 3D makes use of residual blocks from ResNet18 3D in its encoder for feature extraction, and links the output from each encoder block to its corresponding decoder block to account for lost spatial information due to multiple downsampling. 
+2. **LinkNet 3D** - The LinkNet 3D is a modification upon the existing LinkNet whihc operated in 2D. LinkNet 3D makes use of residual blocks from ResNet18 3D in its encoder for feature extraction, and links the output from each encoder block to its corresponding decoder block to account for lost spatial information as a result of multiple downsampling. 
 
-3. PSPNet 3D - The PSPNet 3D is a modification upon the existing PSPNet in 2D. PSPNet 3D makes use of a 3D Pyramid Pooling Module for interpolating the 3D feature maps into different resolutions that facilitates efficient extraction of spatial information and global context capturing. This helps the model learn about the spatial context associated with different classes of the image.
+3. **PSPNet 3D** - The PSPNet 3D is a modification upon the existing PSPNet which operates in 2D. PSPNet 3D makes use of a 3D Pyramid Pooling Module for interpolating the 3D feature maps into different resolutions that facilitates efficient extraction of spatial information and global context capturing that helps it learn about the spatial context associated with different classes of the image.
+
+All 3 segmentation models were trained using the [PyTorch](https://pytorch.org/docs/stable/index.html) with 250 images of batch size 4, for 200 iterations using the [RMSProp](https://pytorch.org/docs/stable/generated/torch.optim.RMSprop.html) optimization algorithm.
+
+## Dataset
+We have used the [Brain Tumor Segmentation 2020 (BraTS2020)](https://www.med.upenn.edu/cbica/brats2020/data.html) dataset for the brain tumor segmentation task in 3d space using our proposed architectures. All BraTS multimodal scans are available as NIfTI files (.nii.gz) and describe 
+* native (T1) 
+* post-contrast T1-weighted (T1Gd)
+* T2-weighted (T2)
+* T2 Fluid Attenuated Inversion Recovery (T2-FLAIR) volumes 
+
+### Guidelines to download, setup and use the dataset
+The BraTS2020 dataset maybe downloaded [here](https://www.kaggle.com/awsaf49/brats20-dataset-training-validation) as a file named *archive.zip*.
+
+**Please write the following commands on your terminal to extract the file in the proper directory.**
+```bash
+  $ mkdir brats
+  $ unzip </path/to/archive.zip> -d </path/to/brats>
+```
 
 ## Installation and Quick Start
 To use the repo and run inferences, please follow the guidelines below
 
 - Cloning the Repository: 
 
-        $ git clone https://github.com/indiradutta/Utilizing-Attention-Linked-Blocks-And-Pyramid-Pooling-To-Propel-Brain-Tumor-Segmentation-In-3D
+        $ git clone https://github.com/indiradutta/BrainTumorSeg-III-D
         
 - Entering the directory: 
 
-        $ cd Utilizing-Attention-Linked-Blocks-And-Pyramid-Pooling-To-Propel-Brain-Tumor-Segmentation-In-3D/
+        $ cd BrainTumorSeg-III-D/
         
 - Setting up the Python Environment with dependencies:
 
@@ -51,6 +66,10 @@ from segment import Seg
 # initializing the Seg object 
 seg = Seg('results/test.nii', model = "arunet3d", img_dim = (64,64))
 seg.inference(set_weight_dir = "arunet3d.pth", path = 'result.png')
+```
+The repo comes pre-installed with a training file `train.py`. If you want to re-train any of the models with more number of images or slices, please run the following command:
+```bash
+python train.py --model_name <model name> --dataset_path <path/to/MICCAI_BraTS2020_TrainingData/> --epochs <iterations>
 ```
 
 ## Results
