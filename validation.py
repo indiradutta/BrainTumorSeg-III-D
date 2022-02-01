@@ -2,6 +2,7 @@ import torch
 import torchio as tio
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
+
 import numpy as np
 import pickle
 import argparse
@@ -15,8 +16,8 @@ from src.models.PSPNet.pspnet3D import PSPNet
 
 from src.train.val import validation
 
-with open('imgs.pkl','rb') as f:
-    d = pickle.load(f)
+with open('imgs.pkl','rb') as file:
+    d = pickle.load(file)
 
 
 __models__ = ["arunet3d",

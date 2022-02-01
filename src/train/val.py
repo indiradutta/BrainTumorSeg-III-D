@@ -1,8 +1,9 @@
-import tqdm
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
+
 import os
+import tqdm
 
 #os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
@@ -50,3 +51,4 @@ def validation(model, loader, epochs):
         print('Epoch: ',str(e),'Dice Loss: ',str(loss.item()),'Dice Score: ',str(score))
 
     plot(losses,dice_scores)
+    
