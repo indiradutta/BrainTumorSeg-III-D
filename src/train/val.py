@@ -40,15 +40,15 @@ def validation(model, loader, epochs):
                     
                     inputs, targets = x[i].float(), y[i].float()
                     inputs, targets = inputs.cuda(), targets.cuda()
+                    targets =  targets.permute(0,4,1,2,3)
 
                     out = model(inputs)                    
                     dice = DiceLoss()
                     loss, score = dice.dice_loss(out, targets.detach(), multiclass=True)
             
         losses.append(loss.item())
-        dice_scores.append(score)
+        dice_scores.append(score.item())
 
-        print('Epoch: ',str(e),'Dice Loss: ',str(loss.item()),'Dice Score: ',str(score))
+        print('Epoch: ',str(e),'Dice Loss: ',str(loss.item()),'Dice Score: ',str(score.item()))
 
     plot(losses,dice_scores)
-    
