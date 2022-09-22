@@ -42,6 +42,9 @@ To use the repo and run inferences, please follow the guidelines below
         
 - Setting up the Python Environment with dependencies:
 
+        $ pip install virtualenv
+        $ virtualenv venv
+        $ source venv/bin/activate
         $ pip install -r requirements.txt
 
 - Running the file for inference:
