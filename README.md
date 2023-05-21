@@ -93,7 +93,7 @@ LinkNet 3D | ![linknet_res](https://user-images.githubusercontent.com/66861243/1
 PSPNet 3D | ![pspnet_res](https://user-images.githubusercontent.com/66861243/136074937-0a6c4a0f-7320-471c-94c5-dca758851a75.png) |
 
 ## Citation
-If this work is useful for your research, please consider citing through:
+If you find this work helpful for your research, please consider citing through:
 ```
 @INPROCEEDINGS{10051771,
   author={Ravi, Pooja and Roy, Srijarko and Dutta, Indira and Kottursamy, Kottilingam},
