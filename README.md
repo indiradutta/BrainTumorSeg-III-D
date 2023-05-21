@@ -91,3 +91,17 @@ Architecture | Result
 AR-UNET 3D | ![arunet_res](https://user-images.githubusercontent.com/66861243/136074804-2fcfbda4-9ae4-4f85-ad95-f3a6f02a2427.png) |
 LinkNet 3D | ![linknet_res](https://user-images.githubusercontent.com/66861243/136074856-605644ba-9f3f-4a17-a4e3-efedd65c25c8.png) |
 PSPNet 3D | ![pspnet_res](https://user-images.githubusercontent.com/66861243/136074937-0a6c4a0f-7320-471c-94c5-dca758851a75.png) |
+
+## Citation
+If this work is useful for your research, please consider citing through:
+```
+@INPROCEEDINGS{10051771,
+  author={Ravi, Pooja and Roy, Srijarko and Dutta, Indira and Kottursamy, Kottilingam},
+  booktitle={2022 IEEE/ACIS 23rd International Conference on Software Engineering, Artificial Intelligence, Networking and Parallel/Distributed Computing (SNPD)}, 
+  title={Attention Mechanism, Linked Networks, and Pyramid Pooling Enabled 3D Biomedical Image Segmentation}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={91-96},
+  doi={10.1109/SNPD54884.2022.10051771}}
+```
